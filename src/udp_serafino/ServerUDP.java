@@ -32,32 +32,31 @@ public class ServerUDP {
 		String messageIn, messageOut;
 		//Data e ora correnti
 		Date d;
+            try {
+		//si crea il datagramsocket e si associa alla porta specifica
+		dSocket = new DatagramSocket(port);
+		System.out.println("Server pronto!");
+                      
+		while(true){
+                    System.out.println("Server in ascolto sulla porta " + port + "!\n");
+		//quanti byte conterà il nostro array
+                    //buffer= array di byte
+                    buffer = new byte[256];
 		
-		
-		
-		try {
-			//si crea il datagramsocket e si associa alla porta specifica
-			dSocket = new DatagramSocket(port);
-			System.out.println("Server pronto!");
-                        
-			while(true){
-				System.out.println("Server in ascolto sulla porta " + port + "!\n");
-				//quanti byte conterà il nostro array
-                                buffer = new byte[256];
-		
-				//si crea un datagramma UDP in cui trasportare il buffer di lunghezza length
-				inputPacket = new DatagramPacket(buffer, buffer.length);
+                    //si crea un datagramma UDP in cui trasportare il buffer di lunghezza length
+                    //area di memoria dedicata al ricevere i dati 
+                    inputPacket = new DatagramPacket(buffer, buffer.length);
 				
-				//si ricevono i byte dal client e si blocca finchè arrivano i pacchetti
-				dSocket.receive(inputPacket);
+                    //si ricevono i byte dal client e si blocca finchè arrivano i pacchetti
+                    dSocket.receive(inputPacket);
+                    //dall'HEdear del pacchetti, riesco a  capire a chi "rispondere"
+                    //si recupera l'indirizzo IP e la porta UDP del client
+                    InetAddress clientAddress = inputPacket.getAddress();
+                    int clientPort = inputPacket.getPort();
 				
-				//si recupera l'indirizzo IP e la porta UDP del client
-				InetAddress clientAddress = inputPacket.getAddress();
-				int clientPort = inputPacket.getPort();
-				
-				//si stampa a video il messaggio ricevuto dal client
-				messageIn = new String(inputPacket.getData(), 0, inputPacket.getLength());
-				System.out.println("SONO IL CLIENT " + clientAddress + 
+                    //si stampa a video il messaggio ricevuto dal client
+                    messageIn = new String(inputPacket.getData(), 0, inputPacket.getLength());
+                    System.out.println("SONO IL CLIENT " + clientAddress + 
 						":" + clientPort + "> " + messageIn);
 				
 				//si crea un oggetto Date con la data corrente
